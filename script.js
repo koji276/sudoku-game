@@ -36,13 +36,21 @@ function createBoard(board) {
     row.forEach((cellValue, colIndex) => {
       const cell = document.createElement('input');
       cell.type = 'number';
-      cell.min = 1;
+      cell.min = 0;
       cell.max = 9;
       cell.classList.add('cell');
+
       if (cellValue) {
         cell.value = cellValue;
         cell.disabled = true;
+      } else {
+        cell.addEventListener('input', () => {
+          if (cell.value === '0') {
+            cell.value = '';
+          }
+        });
       }
+
       boardContainer.appendChild(cell);
     });
   });
