@@ -20,18 +20,23 @@ body {
   background-color: #f9f9f9;
 }
 
-.cell:nth-child(3n+1) {
-  border-left: 2px solid black;
-}
-
+/* 3列目と6列目の右側に黒い線 */
 .cell:nth-child(3n) {
   border-right: 2px solid black;
 }
 
-#sudoku-board .cell:nth-child(27), #sudoku-board .cell:nth-child(54) {
+/* 1列目の左側に黒い線 */
+.cell:nth-child(3n+1) {
+  border-left: 2px solid black;
+}
+
+/* 3行目と6行目の下側に黒い線 */
+#sudoku-board .cell:nth-child(n + 19):nth-child(-n + 27),
+#sudoku-board .cell:nth-child(n + 46):nth-child(-n + 54) {
   border-bottom: 2px solid black;
 }
 
-#sudoku-board .cell:nth-child(n + 1):nth-child(-n + 9) {
+/* 最上行の上側に黒い線 */
+#sudoku-board .cell:nth-child(1) {
   border-top: 2px solid black;
 }
