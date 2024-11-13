@@ -2,15 +2,20 @@ const easyBoard = [
   [5, 3, null, null, 7, null, null, null, null],
   [6, null, null, 1, 9, 5, null, null, null],
   [null, 9, 8, null, null, null, null, 6, null],
-  // 他の行も同様に設定
+  [8, null, null, null, 6, null, null, null, 3],
+  [4, null, null, 8, null, 3, null, null, 1],
+  [7, null, null, null, 2, null, null, null, 6],
+  [null, 6, null, null, null, null, 2, 8, null],
+  [null, null, null, 4, 1, 9, null, null, 5],
+  [null, null, null, null, 8, null, null, 7, 9],
 ];
 
 const mediumBoard = [
-  // 中級の数独盤面
+  // 中級の9行9列の数独盤面
 ];
 
 const hardBoard = [
-  // 上級の数独盤面
+  // 上級の9行9列の数独盤面
 ];
 
 function startGame() {
