@@ -10,14 +10,6 @@ const easyBoard = [
   [null, null, null, null, 8, null, null, 7, 9],
 ];
 
-const mediumBoard = [
-  // 中級の9行9列の数独盤面
-];
-
-const hardBoard = [
-  // 上級の9行9列の数独盤面
-];
-
 function startGame() {
   const level = document.getElementById('level').value;
   let board;
@@ -39,10 +31,15 @@ function createBoard(board) {
       cell.min = 0;
       cell.max = 9;
       cell.classList.add('cell');
-
+      
       if (cellValue) {
         cell.value = cellValue;
         cell.disabled = true;
+        cell.classList.add('locked'); // 確定セルとしてロック
+        cell.addEventListener('click', () => {
+          // クリックで背景色をトグル
+          cell.classList.toggle('highlighted');
+        });
       } else {
         cell.addEventListener('input', () => {
           if (cell.value === '0') {
