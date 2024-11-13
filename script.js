@@ -1,11 +1,13 @@
 const SIZE = 9;
 
+// 確定した完全な解答を保持
+let solutionBoard = [];
+
 // 数独の解答を生成する関数
 function generateFullBoard() {
   const board = Array.from({ length: SIZE }, () => Array(SIZE).fill(null));
 
   function isSafe(board, row, col, num) {
-    // 同じ行、列、3x3ブロックに数字があるかチェック
     for (let i = 0; i < SIZE; i++) {
       if (board[row][i] === num || board[i][col] === num) return false;
       const boxRow = 3 * Math.floor(row / 3) + Math.floor(i / 3);
@@ -38,7 +40,6 @@ function generateFullBoard() {
   return board;
 }
 
-// 配列をランダムにシャッフルする関数
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -47,9 +48,9 @@ function shuffle(array) {
   return array;
 }
 
-// パズルを生成するために一部の数字を削除
 function generatePuzzle(board, difficulty = 'easy') {
   const puzzle = board.map(row => [...row]);
+  solutionBoard = board; // 完全な解答を保存
   let attempts = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 30 : 40;
 
   while (attempts > 0) {
@@ -64,7 +65,6 @@ function generatePuzzle(board, difficulty = 'easy') {
   return puzzle;
 }
 
-// ゲームを開始し、新しいパズルを作成する
 function startGame() {
   const level = document.getElementById('level').value;
   const fullBoard = generateFullBoard();
@@ -72,7 +72,6 @@ function startGame() {
   createBoard(puzzle);
 }
 
-// 盤面を表示する関数
 function createBoard(board) {
   const boardContainer = document.getElementById('sudoku-board');
   boardContainer.innerHTML = '';
@@ -88,11 +87,7 @@ function createBoard(board) {
       if (cellValue) {
         cell.value = cellValue;
         cell.disabled = true;
-        cell.classList.add('locked'); // 確定セルとしてロック
-        cell.addEventListener('click', () => {
-          // クリックで背景色をトグル
-          cell.classList.toggle('highlighted');
-        });
+        cell.classList.add('locked');
       } else {
         cell.addEventListener('input', () => {
           if (cell.value === '0') {
@@ -104,5 +99,37 @@ function createBoard(board) {
       boardContainer.appendChild(cell);
     });
   });
+}
+
+// 解答をチェックする関数
+function checkSolution() {
+  const boardContainer = document.getElementById('sudoku-board');
+  const inputs = boardContainer.getElementsByTagName('input');
+  let isCorrect = true;
+
+  // 各セルの値をチェック
+  Array.from(inputs).forEach((input, index) => {
+    const row = Math.floor(index / SIZE);
+    const col = index % SIZE;
+    const value = parseInt(input.value, 10);
+
+    // 入力が正しいか確認
+    if (value !== solutionBoard[row][col]) {
+      isCorrect = false;
+      input.style.backgroundColor = '#f8d7da'; // 間違っているセルを赤くする
+    } else {
+      input.style.backgroundColor = ''; // 正しいセルは元の色
+    }
+  });
+
+  // 結果を表示
+  const resultContainer = document.getElementById('result');
+  if (isCorrect) {
+    resultContainer.textContent = '成功！';
+    resultContainer.style.color = 'green';
+  } else {
+    resultContainer.textContent = '間違いがあります。もう一度確認してください。';
+    resultContainer.style.color = 'red';
+  }
 }
 
