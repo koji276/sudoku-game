@@ -36,20 +36,12 @@ body {
   border-bottom: 2px solid black;
 }
 
-/* 最上行の上側に黒い線 */
-#sudoku-board .cell:nth-child(1) {
+/* 1行目の上側に黒い線 */
+#sudoku-board .cell:nth-child(-n + 9) {
   border-top: 2px solid black;
 }
 
-.cell {
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  font-size: 20px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-}
-
-.cell.locked {
-  background-color: #d3d3d3; /* 確定セル用の濃い背景色 */
+/* 9行目の下側に黒い線 */
+#sudoku-board .cell:nth-child(n + 73) {
+  border-bottom: 2px solid black;
 }
