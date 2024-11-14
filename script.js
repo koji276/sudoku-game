@@ -50,8 +50,8 @@ function shuffle(array) {
 
 function generatePuzzle(board, difficulty = 'easy') {
   const puzzle = board.map(row => [...row]);
-  solutionBoard = board; // 完全な解答を保存
-  let attempts = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 30 : 40;
+  solutionBoard = board;
+  let attempts = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 30 : difficulty === 'hard' ? 45 : 40;
 
   while (attempts > 0) {
     const row = Math.floor(Math.random() * SIZE);
@@ -64,6 +64,7 @@ function generatePuzzle(board, difficulty = 'easy') {
 
   return puzzle;
 }
+
 
 function startGame() {
   const level = document.getElementById('level').value;
