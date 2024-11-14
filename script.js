@@ -61,19 +61,17 @@ function generatePuzzle(board, difficulty = 'easy') {
     attempts = 45; // Hardの空欄数を増加
   }
 
-  // 特定のパターンで空欄を作る
   while (attempts > 0) {
     const row = Math.floor(Math.random() * SIZE);
     const col = Math.floor(Math.random() * SIZE);
 
-    // 空欄にするセルがすでに空でない場合
     if (puzzle[row][col] !== null) {
       const temp = puzzle[row][col];
       puzzle[row][col] = null;
 
-      // 一意解チェック（バックトラッキングを使って一意解かを判断）
+      // 一意解チェック
       if (!hasUniqueSolution(puzzle)) {
-        puzzle[row][col] = temp; // 一意解でないなら元に戻す
+        puzzle[row][col] = temp;
         continue;
       }
 
@@ -89,6 +87,8 @@ function hasUniqueSolution(puzzle) {
   let solutionCount = 0;
 
   function solve(board) {
+    if (solutionCount > 1) return; // 解が2つ見つかったら打ち切る
+
     for (let row = 0; row < SIZE; row++) {
       for (let col = 0; col < SIZE; col++) {
         if (board[row][col] === null) {
@@ -103,6 +103,7 @@ function hasUniqueSolution(puzzle) {
         }
       }
     }
+
     solutionCount++;
   }
 
@@ -154,13 +155,11 @@ function checkSolution() {
   const inputs = boardContainer.getElementsByTagName('input');
   let isCorrect = true;
 
-  // 各セルの値をチェック
   Array.from(inputs).forEach((input, index) => {
     const row = Math.floor(index / SIZE);
     const col = index % SIZE;
     const value = parseInt(input.value, 10);
 
-    // 入力が正しいか確認
     if (value !== solutionBoard[row][col]) {
       isCorrect = false;
       input.style.backgroundColor = '#f8d7da'; // 間違っているセルを赤くする
@@ -169,7 +168,6 @@ function checkSolution() {
     }
   });
 
-  // 結果を表示
   const resultContainer = document.getElementById('result');
   if (isCorrect) {
     resultContainer.textContent = '成功！';
@@ -179,4 +177,3 @@ function checkSolution() {
     resultContainer.style.color = 'red';
   }
 }
-
