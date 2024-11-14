@@ -51,19 +51,66 @@ function shuffle(array) {
 function generatePuzzle(board, difficulty = 'easy') {
   const puzzle = board.map(row => [...row]);
   solutionBoard = board; // 完全な解答を保存
-  let attempts = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 30 : 40;
+  
+  let attempts;
+  if (difficulty === 'easy') {
+    attempts = 20;
+  } else if (difficulty === 'medium') {
+    attempts = 30;
+  } else {
+    attempts = 45; // Hardの空欄数を増加
+  }
 
+  // 特定のパターンで空欄を作る
   while (attempts > 0) {
     const row = Math.floor(Math.random() * SIZE);
     const col = Math.floor(Math.random() * SIZE);
+
+    // 空欄にするセルがすでに空でない場合
     if (puzzle[row][col] !== null) {
+      const temp = puzzle[row][col];
       puzzle[row][col] = null;
+
+      // 一意解チェック（バックトラッキングを使って一意解かを判断）
+      if (!hasUniqueSolution(puzzle)) {
+        puzzle[row][col] = temp; // 一意解でないなら元に戻す
+        continue;
+      }
+
       attempts--;
     }
   }
 
   return puzzle;
 }
+
+// パズルに一意解があるかを確認する関数
+function hasUniqueSolution(puzzle) {
+  let solutionCount = 0;
+
+  function solve(board) {
+    for (let row = 0; row < SIZE; row++) {
+      for (let col = 0; col < SIZE; col++) {
+        if (board[row][col] === null) {
+          for (let num = 1; num <= 9; num++) {
+            if (isSafe(board, row, col, num)) {
+              board[row][col] = num;
+              solve(board);
+              board[row][col] = null;
+            }
+          }
+          return;
+        }
+      }
+    }
+    solutionCount++;
+  }
+
+  const boardCopy = puzzle.map(row => [...row]);
+  solve(boardCopy);
+  return solutionCount === 1; // 一意解があるかどうか
+}
+
 
 function startGame() {
   const level = document.getElementById('level').value;
