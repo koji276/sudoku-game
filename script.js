@@ -51,67 +51,19 @@ function shuffle(array) {
 function generatePuzzle(board, difficulty = 'easy') {
   const puzzle = board.map(row => [...row]);
   solutionBoard = board; // 完全な解答を保存
-  
-  let attempts;
-  if (difficulty === 'easy') {
-    attempts = 20;
-  } else if (difficulty === 'medium') {
-    attempts = 30;
-  } else {
-    attempts = 45; // Hardの空欄数を増加
-  }
+  let attempts = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 30 : 40;
 
   while (attempts > 0) {
     const row = Math.floor(Math.random() * SIZE);
     const col = Math.floor(Math.random() * SIZE);
-
     if (puzzle[row][col] !== null) {
-      const temp = puzzle[row][col];
       puzzle[row][col] = null;
-
-      // 一意解チェック
-      if (!hasUniqueSolution(puzzle)) {
-        puzzle[row][col] = temp;
-        continue;
-      }
-
       attempts--;
     }
   }
 
   return puzzle;
 }
-
-// パズルに一意解があるかを確認する関数
-function hasUniqueSolution(puzzle) {
-  let solutionCount = 0;
-
-  function solve(board) {
-    if (solutionCount > 1) return; // 解が2つ見つかったら打ち切る
-
-    for (let row = 0; row < SIZE; row++) {
-      for (let col = 0; col < SIZE; col++) {
-        if (board[row][col] === null) {
-          for (let num = 1; num <= 9; num++) {
-            if (isSafe(board, row, col, num)) {
-              board[row][col] = num;
-              solve(board);
-              board[row][col] = null;
-            }
-          }
-          return;
-        }
-      }
-    }
-
-    solutionCount++;
-  }
-
-  const boardCopy = puzzle.map(row => [...row]);
-  solve(boardCopy);
-  return solutionCount === 1; // 一意解があるかどうか
-}
-
 
 function startGame() {
   const level = document.getElementById('level').value;
@@ -155,11 +107,13 @@ function checkSolution() {
   const inputs = boardContainer.getElementsByTagName('input');
   let isCorrect = true;
 
+  // 各セルの値をチェック
   Array.from(inputs).forEach((input, index) => {
     const row = Math.floor(index / SIZE);
     const col = index % SIZE;
     const value = parseInt(input.value, 10);
 
+    // 入力が正しいか確認
     if (value !== solutionBoard[row][col]) {
       isCorrect = false;
       input.style.backgroundColor = '#f8d7da'; // 間違っているセルを赤くする
@@ -168,6 +122,7 @@ function checkSolution() {
     }
   });
 
+  // 結果を表示
   const resultContainer = document.getElementById('result');
   if (isCorrect) {
     resultContainer.textContent = '成功！';
