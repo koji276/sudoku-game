@@ -133,3 +133,67 @@ function checkSolution() {
     resultContainer.style.color = 'red';
   }
 }
+
+let timerInterval; // タイマーのインターバルID
+let elapsedTime = 0; // 経過時間（秒単位）
+
+// タイマーを開始する関数
+function startTimer() {
+  elapsedTime = 0; // 経過時間をリセット
+  const timerElement = document.getElementById('timer');
+  timerElement.textContent = "Time: 0:00"; // タイマー表示を初期化
+
+  // 1秒ごとにタイマーを更新
+  timerInterval = setInterval(() => {
+    elapsedTime++;
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }, 1000);
+}
+
+// タイマーを停止する関数
+function stopTimer() {
+  clearInterval(timerInterval); // タイマーの更新を停止
+}
+
+// ゲームの開始時にタイマーをスタートさせる
+function startGame() {
+  stopTimer(); // 以前のタイマーを停止
+  startTimer(); // 新しいタイマーを開始
+
+  const level = document.getElementById('level').value;
+  const fullBoard = generateFullBoard();
+  const puzzle = generatePuzzle(fullBoard, level);
+  createBoard(puzzle);
+}
+
+// ゲームクリア時や終了時にタイマーを停止させる
+function checkSolution() {
+  const boardContainer = document.getElementById('sudoku-board');
+  const inputs = boardContainer.getElementsByTagName('input');
+  let isCorrect = true;
+
+  Array.from(inputs).forEach((input, index) => {
+    const row = Math.floor(index / SIZE);
+    const col = index % SIZE;
+    const value = parseInt(input.value, 10);
+
+    if (value !== solutionBoard[row][col]) {
+      isCorrect = false;
+      input.style.backgroundColor = '#f8d7da';
+    } else {
+      input.style.backgroundColor = '';
+    }
+  });
+
+  const resultContainer = document.getElementById('result');
+  if (isCorrect) {
+    stopTimer(); // 正解時にタイマーを停止
+    resultContainer.textContent = '成功！';
+    resultContainer.style.color = 'green';
+  } else {
+    resultContainer.textContent = '間違いがあります。もう一度確認してください。';
+    resultContainer.style.color = 'red';
+  }
+}
